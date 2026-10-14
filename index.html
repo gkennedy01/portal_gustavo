@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Portal Gustavo - Minha Central de Produtividade" />
+  <title>Portal Gustavo</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ============================================================
+       CABEÇALHO
+       ============================================================ -->
+  <header class="app-header">
+    <div class="app-header__inner">
+      <div class="brand">
+        <div class="brand__logo" aria-hidden="true">G</div>
+        <div>
+          <h1 class="brand__title">Portal Gustavo</h1>
+          <p class="brand__subtitle">Minha Central de Produtividade</p>
+        </div>
+      </div>
+      <div class="header-clock" aria-live="off">
+        <span id="clock-time" class="header-clock__time">--:--</span>
+        <span id="clock-date" class="header-clock__date">&nbsp;</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- ============================================================
+       CONTEÚDO (SPA - tudo na mesma tela)
+       Para adicionar um novo widget: crie um <section class="card">
+       dentro de .grid e um módulo correspondente em script.js.
+       ============================================================ -->
+  <main class="grid">
+
+    <!-- ===== MÓDULO 1: CALCULADORA DE PONTO ===== -->
+    <section class="card" id="card-ponto" aria-labelledby="ponto-title">
+      <header class="card__header">
+        <h2 class="card__title" id="ponto-title">🕒 Calculadora de Ponto</h2>
+        <button type="button" class="btn btn--ghost" id="ponto-clear">Limpar</button>
+      </header>
+
+      <div class="card__body">
+        <div class="form-grid">
+          <label class="field">
+            <span class="field__label">Horário de Entrada</span>
+            <input type="time" id="ponto-entrada" class="input" />
+          </label>
+          <label class="field">
+            <span class="field__label">Saída para Almoço</span>
+            <input type="time" id="ponto-saida-almoco" class="input" />
+          </label>
+          <label class="field">
+            <span class="field__label">Retorno do Almoço</span>
+            <input type="time" id="ponto-retorno-almoco" class="input" />
+          </label>
+          <label class="field">
+            <span class="field__label">Jornada</span>
+            <input type="time" id="ponto-jornada" class="input" value="08:48" />
+          </label>
+        </div>
+
+        <div class="result" id="ponto-result" data-state="idle">
+          <span class="result__label">Horário Previsto de Saída</span>
+          <strong class="result__value" id="ponto-saida">--:--</strong>
+          <span class="result__hint" id="ponto-hint">Preencha entrada, saída e retorno do almoço.</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== MÓDULO 2: AGENDA SEMANAL ===== -->
+    <section class="card" id="card-agenda" aria-labelledby="agenda-title">
+      <header class="card__header">
+        <h2 class="card__title" id="agenda-title">📅 Agenda Semanal</h2>
+        <span class="status" id="agenda-status" aria-live="polite"></span>
+      </header>
+
+      <div class="card__body">
+        <div class="agenda" id="agenda-list">
+          <!-- Dias gerados via JavaScript -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== MÓDULO 3: LEMBRETES ===== -->
+    <section class="card" id="card-lembretes" aria-labelledby="lembretes-title">
+      <header class="card__header">
+        <h2 class="card__title" id="lembretes-title">🔔 Lembretes</h2>
+        <div class="counters">
+          <span class="chip chip--pending">Pendentes: <b id="lembretes-pendentes">0</b></span>
+          <span class="chip chip--done">Concluídos: <b id="lembretes-concluidos">0</b></span>
+        </div>
+      </header>
+
+      <div class="card__body">
+        <form class="inline-form" id="lembretes-form" autocomplete="off">
+          <input type="text" id="lembretes-input" class="input" placeholder="Novo lembrete..." maxlength="120" required />
+          <button type="submit" class="btn btn--primary">Adicionar</button>
+        </form>
+
+        <ul class="list" id="lembretes-list">
+          <!-- Itens gerados via JavaScript -->
+        </ul>
+        <p class="empty" id="lembretes-empty">Nenhum lembrete por aqui. 🎉</p>
+      </div>
+    </section>
+
+    <!-- ===== MÓDULO 4: CONTROLE FINANCEIRO ===== -->
+    <section class="card" id="card-financeiro" aria-labelledby="financeiro-title">
+      <header class="card__header">
+        <h2 class="card__title" id="financeiro-title">💰 Controle Financeiro</h2>
+      </header>
+
+      <div class="card__body">
+        <div class="summary">
+          <div class="summary__item">
+            <span class="summary__label">Total Receitas</span>
+            <strong class="summary__value summary__value--income" id="fin-receitas">R$ 0,00</strong>
+          </div>
+          <div class="summary__item">
+            <span class="summary__label">Total Despesas</span>
+            <strong class="summary__value summary__value--expense" id="fin-despesas">R$ 0,00</strong>
+          </div>
+          <div class="summary__item summary__item--balance" id="fin-saldo-box" data-state="neutral">
+            <span class="summary__label">Saldo Atual</span>
+            <strong class="summary__value" id="fin-saldo">R$ 0,00</strong>
+          </div>
+        </div>
+
+        <form class="fin-form" id="fin-form" autocomplete="off">
+          <input type="text" id="fin-desc" class="input" placeholder="Descrição" maxlength="60" required />
+          <input type="number" id="fin-valor" class="input" placeholder="Valor" min="0.01" step="0.01" required />
+          <select id="fin-tipo" class="input" aria-label="Tipo">
+            <option value="receita">Receita</option>
+            <option value="despesa">Despesa</option>
+          </select>
+          <button type="submit" class="btn btn--primary">Adicionar</button>
+        </form>
+
+        <ul class="list" id="fin-list">
+          <!-- Lançamentos gerados via JavaScript -->
+        </ul>
+        <p class="empty" id="fin-empty">Nenhum lançamento ainda.</p>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="app-footer">
+    Portal Gustavo · Dados salvos apenas neste navegador (LocalStorage)
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
